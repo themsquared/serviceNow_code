@@ -6,28 +6,28 @@ from jsondiff import diff
 
 class ServiceNow:
 
-    # Set proper headers
-    headers = {"Content-Type":"application/json","Accept":"application/json"}
 
-    def findSysId(url, user, pwd):
-        # Set proper headers
-        headers = {"Content-Type":"application/json","Accept":"application/json"}
+    def findSysId(url, user, pwd, headers):
+        """(findSysId) GETs the server's instance Id from the cmdb_ci_linux_server table in servicenow."""
+        instanceId_url = '{}/api/now/cmdb/instance/cmdb_ci_linux_server?sysparm_query=nameLIKElnux&sysparm_limit=1'.format(url)
         # Do the HTTP request
-        response = requests.get(url, auth=(user, pwd), headers=headers)
+        response = requests.get(instanceId_url, auth=(user, pwd), headers=headers)
         # Check for HTTP codes other than 200
         if response.status_code != 200:
             print('Status:', response.status_code, 'Headers:', response.headers, 'Error Response:', response.content)
             exit()
         data = response.json()
         sys_id = (data["result"][0]["sys_id"])
-        return sys_id
+        return sys_id, url, user, pwd, headers
 
-    def attributes(data , url, user, pwd):
+    def attributes(data):
+        """(attributes) Uses the instance Id collected in the findSysId method and grabs that attributes
+        assigned to the server in its servicenow CMDB page.
+        """
+        sys_id, url, user, pwd, headers = data
         # Set proper headers
-        headers = {"Content-Type":"application/json","Accept":"application/json"}
-        # Set proper headers
-        server_url = 'https://ven01927.service-now.com/api/now/cmdb/instance/cmdb_ci_linux_server/{}?sysparm_fields=sys_id%2Cname%2Casset_tag%2Cserial_number'.format(data)
-        response = requests.get(server_url, auth=(user, pwd), headers=headers)
+        attributes_url = '{}/api/now/cmdb/instance/cmdb_ci_linux_server/{}?sysparm_fields=sys_id%2Cname%2Casset_tag%2Cserial_number'.format(url,sys_id)
+        response = requests.get(attributes_url, auth=(user, pwd), headers=headers)
         # Check for HTTP codes other than 200
         if response.status_code != 200:
             print('Status:', response.status_code, 'Headers:', response.headers, 'Error Response:', response.content)
@@ -38,6 +38,10 @@ class ServiceNow:
         return attributes
 
     def updateTags(host, attrs, api_key, app_key):
+        """(updateTags) Uses the hostname parameter to search a host with a mathing name in Datadog.
+        Once the host is matched, tags are compared to the attributes using jsondiff. Then finally
+        reformated and posted to the Datadog API.
+        """
         options = {
             'api_key': api_key,
             'app_key': app_key
