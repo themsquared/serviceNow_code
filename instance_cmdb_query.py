@@ -4,7 +4,8 @@ from servicenow import ServiceNow as sn
 # EXAMPLE USE OF SERVICENOW TAGS SYNC
 # Set the request parameters
 # This script is limiting the search to one host. This is for a demo.
-url = 'https://ven01927.service-now.com'
+instance = "---"
+url = 'https://{}.service-now.com'.format(instance)
 
 # Set proper headers
 headers = {"Content-Type":"application/json","Accept":"application/json"}

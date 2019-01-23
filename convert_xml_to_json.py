@@ -16,7 +16,7 @@ import requests
 # Parse new json file and update Datadog host tags **Dep**: datadog
 
 #Instance
-instance = 'ven01927'
+instance = '---'
 
 # Set the request parameters
 url = 'https://'+instance+'.service-now.com/api/now/table/problem?sysparm_limit=1'
