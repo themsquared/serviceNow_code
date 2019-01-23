@@ -1,17 +1,17 @@
-import yaml
 import requests
 
-from xmljson import badgerfish as bf
 from json import dumps
-from collections import OrderedDict
 from datadog import initialize, api
 from jsondiff import diff
 
 class ServiceNow:
+
     # Set proper headers
     headers = {"Content-Type":"application/json","Accept":"application/json"}
 
-    def findSysId(instance, url, user, pwd, headers):
+    def findSysId(url, user, pwd):
+        # Set proper headers
+        headers = {"Content-Type":"application/json","Accept":"application/json"}
         # Do the HTTP request
         response = requests.get(url, auth=(user, pwd), headers=headers)
         # Check for HTTP codes other than 200
@@ -22,7 +22,9 @@ class ServiceNow:
         sys_id = (data["result"][0]["sys_id"])
         return sys_id
 
-    def attributes(data , url, user, pwd, headers):
+    def attributes(data , url, user, pwd):
+        # Set proper headers
+        headers = {"Content-Type":"application/json","Accept":"application/json"}
         # Set proper headers
         server_url = 'https://ven01927.service-now.com/api/now/cmdb/instance/cmdb_ci_linux_server/{}?sysparm_fields=sys_id%2Cname%2Casset_tag%2Cserial_number'.format(data)
         response = requests.get(server_url, auth=(user, pwd), headers=headers)
