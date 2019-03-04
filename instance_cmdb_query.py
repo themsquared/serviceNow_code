@@ -21,14 +21,7 @@ APP_KEY = '---'
 DATADOG_PREFIX = 'app'
 
 # Go get the JSON permalink to the :
-url = "https://"+DATADOG_PREFIX+".datadoghq.com/reports/v2/overview?
-api_key="+API_KEY+"&application_key="+APP_KEY+"&metrics=avg%3Aaw
-s.ec2.cpuutilization%2Cavg%3Aazure.vm.percentage_cpu%2Cavg%3Agcp
-.gce.instance.cpu.utilization%2Cavg%3Asystem.cpu.idle%2Cavg%3Asy
-stem.cpu.iowait%2Cavg%3Asystem.load.norm.
-15%2Cavg%3Avsphere.cpu.usage&with_apps=true&with_sources=true&wi
-th_aliases=true&with_meta=true&with_mute_status=true&with_tags=t
-rue"
+url = "https://"+DATADOG_PREFIX+".datadoghq.com/reports/v2/overview?api_key="+API_KEY+"&application_key="+APP_KEY+"&metrics=avg%3Aaws.ec2.cpuutilization%2Cavg%3Aazure.vm.percentage_cpu%2Cavg%3Agcp.gce.instance.cpu.utilization%2Cavg%3Asystem.cpu.idle%2Cavg%3Asystem.cpu.iowait%2Cavg%3Asystem.load.norm.15%2Cavg%3Avsphere.cpu.usage&with_apps=true&with_sources=true&with_aliases=true&with_meta=true&with_mute_status=true&with_tags=true"
 
 response = urllib.urlopen(url)
 data = json.loads(response.read())
